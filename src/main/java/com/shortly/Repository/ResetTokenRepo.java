@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface ResetTokenRepo extends JpaRepository<ResetToken, Long> {
 
-    List<ResetToken> findByUserAndUsed(User user, boolean b);
+    // Returns a single ResetToken object, or null if none match
+    Optional<ResetToken> findFirstByUserAndUsedOrderByCreatedAtDesc(User user, boolean used);
+
 }

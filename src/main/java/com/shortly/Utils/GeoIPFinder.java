@@ -42,11 +42,11 @@ public class GeoIPFinder {
             CountryResponse response =
                     countryDBReader.country(ipAddress);
 
-            return response.country().isoCode();
+            return response.country().name();
 
         } catch (Exception e) {
-            System.out.println("Country not found, setting default IN.");
-            return "IN";
+            System.out.println("Country not found, setting default India.");
+            return "India";
         }
     }
 
