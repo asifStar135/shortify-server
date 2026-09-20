@@ -32,7 +32,7 @@ public class UrlService {
         return urlDetails.getLongUrl();
     }
 
-    public boolean createUrl(CreateUrlRequest urlData, String username) {
+    public UrlMap createUrl(CreateUrlRequest urlData, String username) {
         User loggedInUser = userRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -47,7 +47,7 @@ public class UrlService {
         newUrl.setShortCode(shortCode);
         urlRepo.save(newUrl);
 
-        return true;
+        return newUrl;
     }
 
     public void deleteUrl(Long id, String username) {

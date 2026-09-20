@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -123,16 +124,10 @@ public class UserService {
             String newPassword) {
 
         User user = repo.findByEmail(email)
-                .orElseThrow(() ->
-                        new BadRequestException(ErrorCodes.INVALID_CODE));
+                .orElseThrow(() -> new BadRequestException(ErrorCodes.INVALID_CODE));
 
-        List<ResetToken> tokens =
-                tokenRepo.findByUserAndUsed(user, false);
-
-        if (tokens.isEmpty()) {
-            throw new BadRequestException(ErrorCodes.INVALID_CODE);
-        }
-        ResetToken token = tokens.get(0);
+        ResetToken token = tokenRepo.findFirstByUserAndUsedOrderByCreatedAtDesc(user, false)
+                .orElseThrow(() -> new BadRequestException(ErrorCodes.INVALID_CODE));
 
         // Prevent brute-force attempts against the OTP.
         if (token.getAttempts() >= 5) {

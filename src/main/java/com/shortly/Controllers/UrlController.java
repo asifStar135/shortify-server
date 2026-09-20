@@ -1,6 +1,7 @@
 package com.shortly.Controllers;
 
 import com.shortly.DTO.UrlDTOs.UrlListItem;
+import com.shortly.Models.UrlMap;
 import com.shortly.Utils.Analytics;
 import com.shortly.Utils.ResponseHandler;
 import com.shortly.Utils.ResponseObject;
@@ -14,6 +15,7 @@ import com.shortly.Services.UrlService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -61,14 +63,15 @@ public class UrlController {
 
     @PostMapping("/create")
     ResponseEntity<ResponseObject> createUrl(@Valid @RequestBody CreateUrlRequest urlData, Authentication auth) {
-        urlService.createUrl(urlData, auth.getName());
+        UrlMap newUrl = urlService.createUrl(urlData, auth.getName());
 
-        return ResponseHandler.handleSuccess(200, true, "Short URL created successfully");
+        return ResponseHandler.handleSuccess(200, newUrl, "Short URL created successfully");
     }
 
     @GetMapping("/all")
     public ResponseEntity<ResponseObject> getAllUserURI(Authentication auth) {
         List<UrlListItem> urlList = urlService.getAllUrls(auth.getName());
+        System.out.println(urlList);
 
         return ResponseHandler.handleSuccess(200, urlList, "Created URLs fetched");
     }
@@ -81,7 +84,7 @@ public class UrlController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> editUrlDetails(@PathVariable(value = "id") Long id,                                                       @RequestBody EditUrlRequest request, Authentication auth) {
+    public ResponseEntity<ResponseObject> editUrlDetails(@PathVariable(value = "id") Long id, @RequestBody EditUrlRequest request, Authentication auth) {
         urlService.editUrlDetails(id, request, auth.getName());
         return ResponseHandler.handleSuccess(200, null, "URL details updated");
     }
