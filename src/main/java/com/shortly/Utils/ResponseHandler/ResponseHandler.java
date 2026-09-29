@@ -55,13 +55,14 @@ public final class ResponseHandler {
                         .maxAge(Duration.ofMinutes(60))
                         .build();
 
+                System.out.println("Redirection happened at -> " + System.currentTimeMillis());
                 return ResponseEntity
                         .status(302)
                         .header(HttpHeaders.SET_COOKIE, cookie.toString())
                         .location(targetUri)
                         .build();
             }
-
+            System.out.println("Redirection happened at -> " + System.currentTimeMillis());
             return ResponseEntity.status(302).location(targetUri).build();
         } catch (URISyntaxException ex) {
             return handleError(404, "No valid URL found", null);

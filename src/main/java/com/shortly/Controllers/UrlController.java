@@ -41,8 +41,12 @@ public class UrlController {
     ResponseEntity<ResponseObject> getUrl(@PathVariable String shortCode,
                                           @CookieValue(value = "client_id", required = false) String clientIdCookie,
                                           HttpServletRequest request) {
+        Long timestamp = System.currentTimeMillis();
+        System.out.println("Request incoming at -> " + timestamp);
         // Find the mapped long URL
         String longUrl = urlService.getUrl(shortCode);
+        System.out.println("Service executed at -> " + System.currentTimeMillis());
+        System.out.println("Service function latency -> " + (System.currentTimeMillis() - timestamp));
 
         // Get the request params
         String userAgent = request.getHeader("User-Agent");
@@ -57,6 +61,9 @@ public class UrlController {
 
         // async calculations
         analyticObject.calculateAnalytics(shortCode, IPAdd, userAgent, cookieValue);
+
+        System.out.println("Controller returns at -> " + System.currentTimeMillis());
+        System.out.println("Total Controller delay -> " + (System.currentTimeMillis() - timestamp));
 
         return ResponseHandler.handleRedirect(longUrl, cookieValue);
     }
