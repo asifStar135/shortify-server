@@ -1,8 +1,8 @@
 package com.shortly.Exceptions;
 
 import com.shortly.Utils.ErrorCodes;
-import com.shortly.Utils.ResponseHandler;
-import com.shortly.Utils.ResponseObject;
+import com.shortly.Utils.ResponseHandler.ResponseHandler;
+import com.shortly.Utils.ResponseHandler.ResponseObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

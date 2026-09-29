@@ -28,9 +28,30 @@
     </scm>
     <properties>
         <java.version>17</java.version>
+        <aws.sdk.version>2.39.6</aws.sdk.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
     <dependencies>
 
+        <!-- DynamoDB + Java object mapping -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb-enhanced</artifactId>
+        </dependency>
+        
         <!--        SPRING JPA : FOR DB HANDLING-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,7 +72,7 @@
             <version>0.12.5</version>
             <scope>runtime</scope>
         </dependency>
-        
+
         <!--    GEO IP2 - FOR EXTRACTING COUNTRY NAME FROM IP ADDRESS-->
         <dependency>
             <groupId>com.maxmind.geoip2</groupId>

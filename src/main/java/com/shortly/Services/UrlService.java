@@ -4,14 +4,15 @@ import com.shortly.DTO.UrlDTOs.*;
 import com.shortly.Exceptions.GetUrlNotFoundException;
 import com.shortly.Exceptions.UrlNotFoundException;
 import com.shortly.Models.UrlMap;
+import com.shortly.Models.UrlRedirect;
 import com.shortly.Models.User;
+import com.shortly.Repository.UrlRedirectRepo;
 import com.shortly.Repository.UrlRepo;
 import com.shortly.Repository.UserRepo;
 import com.shortly.Utils.UtilMethods;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,17 +20,19 @@ public class UrlService {
 
     private final UrlRepo urlRepo;
     private final UserRepo userRepo;
+    private final UrlRedirectRepo redirectRepo;
 
-    public UrlService(UrlRepo repo, UserRepo userRepo) {
+    public UrlService(UrlRepo repo, UserRepo userRepo, UrlRedirectRepo redirectRepo) {
         this.urlRepo = repo;
         this.userRepo = userRepo;
+        this.redirectRepo = redirectRepo;
     }
 
     public String getUrl(String shortCode) {
-        UrlMap urlDetails = urlRepo.findUrlData(shortCode, true, new Date())
+        UrlRedirect redirectItem = redirectRepo.getItem(shortCode)
                 .orElseThrow(() -> new GetUrlNotFoundException("Wrong short code"));
 
-        return urlDetails.getLongUrl();
+        return redirectItem.getLongUrl();
     }
 
     public UrlMap createUrl(CreateUrlRequest urlData, String username) {
@@ -46,6 +49,9 @@ public class UrlService {
         String shortCode = UtilMethods.encodeBase62(newUrl.getId());
         newUrl.setShortCode(shortCode);
         urlRepo.save(newUrl);
+
+        UrlRedirect redirectItem = new UrlRedirect(shortCode, urlData.longUrl(), true);
+        redirectRepo.putItem(redirectItem);
 
         return newUrl;
     }

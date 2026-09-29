@@ -2,8 +2,8 @@ package com.shortly.Controllers;
 
 import com.shortly.DTO.userDTOs.*;
 import com.shortly.Models.User;
-import com.shortly.Utils.ResponseHandler;
-import com.shortly.Utils.ResponseObject;
+import com.shortly.Utils.ResponseHandler.ResponseHandler;
+import com.shortly.Utils.ResponseHandler.ResponseObject;
 import jakarta.validation.Valid;
 import com.shortly.Services.UserService;
 import org.springframework.http.ResponseEntity;

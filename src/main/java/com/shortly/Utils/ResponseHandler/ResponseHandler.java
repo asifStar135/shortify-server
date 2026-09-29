@@ -1,9 +1,11 @@
-package com.shortly.Utils;
+package com.shortly.Utils.ResponseHandler;
 
+import com.shortly.Utils.ErrorCodes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;

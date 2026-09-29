@@ -1,4 +1,4 @@
-package com.shortly.Utils;
+package com.shortly.Utils.ResponseHandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
