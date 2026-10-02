@@ -13,6 +13,7 @@ import com.shortly.Utils.UtilMethods;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,12 +29,34 @@ public class UrlService {
         this.redirectRepo = redirectRepo;
     }
 
+    //  Main get long url service method
     public String getUrl(String shortCode) {
-        UrlRedirect redirectItem = redirectRepo.getItem(shortCode)
-                .orElseThrow(() -> new GetUrlNotFoundException("Wrong short code"));
 
-        return redirectItem.getLongUrl();
+        return redirectRepo.getItem(shortCode)
+                .map(UrlRedirect::getLongUrl)
+                .orElseGet(() -> getUrlFromPostgres(shortCode));
     }
+
+    // Fallback to PGSQL database in case of missing dynamoDB entry
+    private String getUrlFromPostgres(String shortCode) {
+
+        UrlMap urlMap = urlRepo.findUrlData(shortCode, true, new Date())
+                .orElseThrow(() ->
+                        new GetUrlNotFoundException("Wrong short code")
+                );
+
+        // optional: repopulate DynamoDB after cache miss
+        redirectRepo.putItem(
+                new UrlRedirect(
+                        urlMap.getShortCode(),
+                        urlMap.getLongUrl(),
+                        urlMap.isActive()
+                )
+        );
+
+        return urlMap.getLongUrl();
+    }
+
 
     public UrlMap createUrl(CreateUrlRequest urlData, String username) {
         User loggedInUser = userRepo.findByUsername(username)
